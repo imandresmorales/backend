@@ -2,6 +2,8 @@ const express = require('express')
 const app = express()
 app.use(express.json())
 app.use(express.static('dist'))
+require('dotenv').config()
+const Person = require('./models/person')
 
 let persons = [
     { 
@@ -43,9 +45,12 @@ app.get('/', (req, res) => {
   res.redirect('/api/persons');
 })
 
-app.get('/api/persons',(request, response) => {
+app.get('/api/persons', (request, response) => {
+  Person.find({}).then(persons => {
     response.json(persons)
   })
+ 
+})
 
 app.get('/api/persons/:id',(request, response) => {
     const id = Number(request.params.id)
@@ -112,7 +117,7 @@ const unknownEndpoint = (request, response) => {
 
 app.use(unknownEndpoint)
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
