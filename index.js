@@ -80,35 +80,19 @@ app.delete('/api/persons/:id', (request, response) => {
 
 app.post('/api/persons', (request, response) => {
   const body = request.body
-  if(body.name === undefined || body.name === ""){
-    response.send(
-      `<p> error: the name has not been defined or does not exist </p>`
-    )
-    return response.status(400).end()
+  
+  if (body.phone === undefined) {
+    return response.status(400).json({ error: 'phone missing' })
   }
-  if(body.number === undefined || body.number === ""){
-    response.send(
-      `<p> error: the number has not been defined or does not exist </p>`
-    )
-    return response.status(400).end()
-  }
-  let persona = persons.filter(person => person.name === body.name)
-  if(persona.name === undefined){
-    response.send(
-      `<p> error: 'name must be unique' </p>`
-    )
-    return response.status(400).end()
-  }
-  const id = persons.length >0 
-    ? Math.max(...persons.map( person => person.id)) +1
-    : 0
-  const person ={
-    "id": id,
-    "name": body.name,
-    "number": body.number
-  }
-  persons = persons.concat(person)
-  response.json(person)
+
+  const person = new Person({
+    name: body.name,
+    phone: body.phone,
+  })
+
+  person.save().then(savedPerson => {
+    response.json(savedPerson)
+  })
 })
 
 const unknownEndpoint = (request, response) => {
