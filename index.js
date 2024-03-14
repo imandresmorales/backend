@@ -85,6 +85,11 @@ app.post('/api/persons', (request, response) => {
   })
 })
 
+// Si el usuario intenta crear una nueva entrada en la agenda para una persona cuyo nombre ya está en la agenda, el frontend intentará actualizar el número de teléfono de la entrada existente realizando una solicitud HTTP PUT a la URL única de la entrada.
+
+// Modifica el backend para admitir esta solicitud.
+
+// Verifica que el frontend funcione después de realizar los cambios.
 app.put('/api/persons/:id', (request, response, next) => {
   const body = request.body
 
