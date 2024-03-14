@@ -6,26 +6,6 @@ require('dotenv').config()
 const Person = require('./models/person')
 
 let persons = [
-    { 
-      "id": 1,
-      "name": "Arto Hellas", 
-      "number": "040-123456"
-    },
-    { 
-      "id": 2,
-      "name": "Ada Lovelace", 
-      "number": "39-44-5323523"
-    },
-    { 
-      "id": 3,
-      "name": "Dan Abramov", 
-      "number": "12-43-234345"
-    },
-    { 
-      "id": 4,
-      "name": "Mary Poppendieck", 
-      "number": "39-23-6423122"
-    }
 ]
 
 const cors = require('cors')
@@ -40,7 +20,6 @@ const requestLogger = (request, response, next) => {
   next()
 }
 
-//Manejo de errores
 const errorHandler = (err, req, resp, next) => {
   console.error(err.message)
 
@@ -103,6 +82,20 @@ app.post('/api/persons', (request, response) => {
   person.save().then(savedPerson => {
     response.json(savedPerson)
   })
+})
+
+app.put('/api/persons/:id', (request, response, next) => {
+  const body = request.body
+
+  const person = {
+    name: body.name,
+    phone: body.phone,
+  }
+  Person.findByIdAndUpdate(request.params.id, person, { new:true})
+  .then(updatePerson => {
+    response.json(updatePerson)
+  })
+  .catch(error => next(error))
 })
 
 const unknownEndpoint = (request, response) => {
