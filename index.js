@@ -40,14 +40,15 @@ const requestLogger = (request, response, next) => {
   next()
 }
 
-const errorHandler = (error, request, response, next) => {
-  console.error(error.message)
+//Manejo de errores
+const errorHandler = (err, req, resp, next) => {
+  console.error(err.message)
 
-  if (error.name === 'CastError') {
-    return response.status(400).send({ error: 'malformatted id' })
+  if (err.name === 'CastError') {
+    return resp.status(400).send({ error: 'malformatted id' })
   } 
 
-  next(error)
+  next(err)
 }
 
 app.use(requestLogger)
