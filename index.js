@@ -36,7 +36,6 @@ app.get('/api/persons', (request, response) => {
   Person.find({}).then(persons => {
     response.json(persons)
   })
- 
 })
 
 app.get('/api/persons/:id',(request, response) => {
@@ -91,7 +90,7 @@ app.put('/api/persons/:id', (request, response, next) => {
     name: body.name,
     phone: body.phone,
   }
-  
+
   Person.findByIdAndUpdate(request.params.id, person, { new:true})
   .then(updatePerson => {
     response.json(updatePerson)
