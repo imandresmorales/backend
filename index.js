@@ -1,16 +1,12 @@
 const express = require('express')
 const app = express()
-app.use(express.json())
-app.use(express.static('dist'))
 require('dotenv').config()
 const Person = require('./models/person')
 
+app.use(express.static('dist'))
+
 let persons = [
 ]
-
-const cors = require('cors')
-
-app.use(cors())
 
 const requestLogger = (request, response, next) => {
   console.log('Method:', request.method)
@@ -30,6 +26,10 @@ const errorHandler = (err, req, resp, next) => {
   next(err)
 }
 
+const cors = require('cors')
+
+app.use(cors())
+app.use(express.json())
 app.use(requestLogger)
 
 app.get('/api/persons', (request, response) => {
@@ -39,13 +39,15 @@ app.get('/api/persons', (request, response) => {
 })
 
 app.get('/api/persons/:id',(request, response) => {
-    const id = Number(request.params.id)
-    const person = persons.find( person => person.id === (id))
-    if(person){
+    Person.findById(request.params.id)
+    .then(person => {
+      if (person) {
         response.json(person)
-    }else{
+      } else {
         response.status(404).end()
-    }
+      }
+    })
+    .catch(error => next(error))
  })
 
 app.get('/info', (request, response) => {
