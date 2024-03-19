@@ -16,7 +16,11 @@ mongoose.connect(url)
   })
 
   const agendaSchema = new mongoose.Schema({
-    name: String,
+    name: {
+      type: String,
+      required: true,
+      minlength: 3
+    },
     phone: String,
   })
   

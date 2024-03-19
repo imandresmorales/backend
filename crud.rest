@@ -6,3 +6,12 @@ DELETE http://localhost:3001/api/persons/65f2364eaff333086cde11b6
 
 ###
 GET http://localhost:3001/api/persons/65e78ac7ca11b836cf8da89b
+
+###
+PUT http://localhost:3001/api/persons
+Content-type: application/json
+
+{
+    "name": "Test Person",
+    "phone": true
+}
