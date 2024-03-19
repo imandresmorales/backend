@@ -15,7 +15,7 @@ mongoose.connect(url)
     console.log('error connecting to MongoDB:', error.message)
   })
 
-  //3.20*: Base de datos de la Agenda Telefónica, paso 8
+  //3.21 Desplegando el backend con base de datos en producción
   const agendaSchema = new mongoose.Schema({
     name: {
       type: String,
