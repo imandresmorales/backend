@@ -19,10 +19,19 @@ mongoose.connect(url)
   const agendaSchema = new mongoose.Schema({
     name: {
       type: String,
-      required: true,
-      minlength: 3
+      minlength: 3,
+      required: true      
     },
-    phone: String,
+    phone: {
+      type: String,
+      validate: {
+        validator: function(v) {
+          return /^[0-9]{2,3}-[0-9]{6,}$/.test(v);
+        },
+        message : props => `${props.value} is not a valid phone number!`
+      },
+      required: [true, 'User phone number required']
+    },
   })
   
   agendaSchema.set('toJSON', {
