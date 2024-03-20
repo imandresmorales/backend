@@ -5,9 +5,6 @@ const Person = require('./models/person')
 
 app.use(express.static('dist'))
 
-let persons = [
-]
-
 const requestLogger = (request, response, next) => {
   console.log('Method:', request.method)
   console.log('Path:  ', request.path)
@@ -23,7 +20,7 @@ const errorHandler = (err, req, resp, next) => {
     return resp.status(400).send({ error: 'malformatted id' })
   } else if(err.name === 'ValidationError'){
     return resp.status(400).json({ error: err.message })
-  } 
+  }
   next(err)
 }
 
@@ -39,8 +36,8 @@ app.get('/api/persons', (request, response) => {
   })
 })
 
-app.get('/api/persons/:id',(request, response) => {
-    Person.findById(request.params.id)
+app.get('/api/persons/:id',(request, response, next) => {
+  Person.findById(request.params.id)
     .then(person => {
       if (person) {
         response.json(person)
@@ -49,7 +46,7 @@ app.get('/api/persons/:id',(request, response) => {
       }
     })
     .catch(error => next(error))
- })
+})
 
 app.get('/info', (request, response) => {
   Person.countDocuments({}).then(count => {
@@ -59,21 +56,21 @@ app.get('/info', (request, response) => {
           <br/>
           ${new Date()}
       </p>`
-  )
-  });
+    )
+  })
 })
 
 app.delete('/api/persons/:id', (req, res, next) => {
   Person.findByIdAndDelete(req.params.id)
-  .then( result => {
-    res.status(204).end()
-  })
-  .catch(error => next(error))
+    .then( () => {
+      res.status(204).end()
+    })
+    .catch(error => next(error))
 })
 
 app.post('/api/persons', (request, response, next) => {
   const body = request.body
-  
+
   if (body.phone === undefined) {
     return response.status(400).json({ error: 'phone missing' })
   }
@@ -90,16 +87,16 @@ app.post('/api/persons', (request, response, next) => {
 })
 
 app.put('/api/persons/:id', (request, response, next) => {
-  const {name, phone} = request.body
+  const { name, phone } = request.body
 
   Person.findByIdAndUpdate(
-    request.params.id, 
-    {name, phone}, 
-    { new:true, runValidators: true, context: 'query'})
-  .then(updatePerson => {
-    response.json(updatePerson)
-  })
-  .catch(error => next(error))
+    request.params.id,
+    { name, phone },
+    { new:true, runValidators: true, context: 'query' })
+    .then(updatePerson => {
+      response.json(updatePerson)
+    })
+    .catch(error => next(error))
 })
 
 const unknownEndpoint = (request, response) => {
@@ -111,5 +108,5 @@ app.use(errorHandler)
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`)
+  console.log(`Server running on port ${PORT}`)
 })

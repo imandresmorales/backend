@@ -8,38 +8,38 @@ console.log('connecting to', url)
 
 mongoose.connect(url)
 
-  .then(result => {
+  .then(() => {
     console.log('connected to MongoDB')
   })
   .catch((error) => {
     console.log('error connecting to MongoDB:', error.message)
   })
 
-  //3.21 Desplegando el backend con base de datos en producción
-  const agendaSchema = new mongoose.Schema({
-    name: {
-      type: String,
-      minlength: 3,
-      required: true      
-    },
-    phone: {
-      type: String,
-      validate: {
-        validator: function(v) {
-          return /^[0-9]{2,3}-[0-9]{6,}$/.test(v);
-        },
-        message : props => `${props.value} is not a valid phone number!`
+//3.21 Desplegando el backend con base de datos en producción
+const agendaSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    minlength: 3,
+    required: true
+  },
+  phone: {
+    type: String,
+    validate: {
+      validator: function(v) {
+        return /^[0-9]{2,3}-[0-9]{6,}$/.test(v)
       },
-      required: [true, 'User phone number required']
+      message : props => `${props.value} is not a valid phone number!`
     },
-  })
-  
-  agendaSchema.set('toJSON', {
-    transform: (document, returnedObject) => {
-      returnedObject.id = returnedObject._id.toString()
-      delete returnedObject._id
-      delete returnedObject.__v
-    }
-  })
+    required: [true, 'User phone number required']
+  },
+})
+
+agendaSchema.set('toJSON', {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString()
+    delete returnedObject._id
+    delete returnedObject.__v
+  }
+})
 
 module.exports = mongoose.model('Contacto', agendaSchema)
